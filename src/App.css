@@ -1,0 +1,206 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center; 
+}
+
+
+.selectors {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.selector {
+  min-width: 150px;
+}
+
+
+.start-btn {
+  margin: 20px 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.game-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.board {
+  display: grid;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.blocked {
+  background-color: white;
+}
+
+.blocked::after {
+  content: "";
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: black;
+  border: 1px solid black;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  display: block;
+  margin: auto;
+}
+
+.marker {
+  background-color: #ffffff/*#3498db;*/
+  color: white;
+}
+
+.marker-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin: auto;
+}
+
+.valid {
+  background-color: #e4f28a;
+  cursor: pointer;
+}
+
+.winner-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 30px;
+  border: 2px solid #d1545e;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+
+}
+
+.winner-message h2 {
+  color: #d1545e;
+  margin-bottom: 15px;
+  
+}
+
+.winner-message button {
+  margin: 5px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+ 
+}
+
+
+.cell-label {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  user-select: none;
+}
+
+
+.move-log-container {
+  max-height: 500px; 
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  flex: 0 0 260px;
+}
+
+.move-log-table {
+  width: 100%;
+  table-layout:auto;
+  border-collapse: collapse;
+}
+
+.move-log-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 2px solid #aaa;
+  background: #242424;
+}
+
+.move-log-table th,
+.move-log-table td {
+  width: 33%; 
+  white-space: nowrap; 
+  border: 1px solid #aaa;
+  padding: 0.5rem;
+  text-align: center;
+  height: 10px;
+}
+
+.move-log-table .active {
+  background-color: #375aa6;
+  font-weight: bold;
+}
+
+/*Responsividade - precisa de ser verificada*/
+
+@media (max-width: 768px) {
+  .board .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .move-log-container {
+    max-height: 300px;
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .board .cell {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .start-btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+

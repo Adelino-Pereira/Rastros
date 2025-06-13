@@ -5,6 +5,8 @@ export default function Board({ grid, marker, validMoves, onCellClick, gameStart
 const rows = grid.length;
 const cols = rows > 0 ? grid[0].length : 0;
 
+  const p1GoalReached = marker && marker[0] === rows - 1 && marker[1] === 0;
+  const p2GoalReached = marker && marker[0] === 0 && marker[1] === cols - 1;
 
 
   const isValidMove = (r, c) =>
@@ -16,7 +18,6 @@ const cols = rows > 0 ? grid[0].length : 0;
     const isValid = isValidMove(r, c);
     const isBlocked = cellVal === 0;
 
-    // Decide CSS classes
     const classNames = ["cell"];
     if (isBlocked && !isMarker) classNames.push("blocked");
     if (isValid) classNames.push("valid");
@@ -27,17 +28,20 @@ const cols = rows > 0 ? grid[0].length : 0;
         className={classNames.join(" ")}
         onClick={() => onCellClick(r, c)}
       >
-        {isMarker && <div className="marker-circle" />}
+          {isMarker && <div className="marker-circle" />}
+        {!isMarker && r === rows - 1 && c === 0 && !p1GoalReached && (
+          <span className="goal-label">1</span>
+        )}
+        {!isMarker && r === 0 && c === cols - 1 && !p2GoalReached && (
+          <span className="goal-label">2</span>
+        )}
       </div>
     );
   };
-// Generate column labels (a, b, c, ...)
 
   const colLabels = Array.from({ length: cols }, (_, i) =>
     String.fromCharCode(97 + i)
   );
-
-
 
 
 

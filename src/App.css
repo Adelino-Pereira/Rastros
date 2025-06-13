@@ -137,6 +137,12 @@
   user-select: none;
 }
 
+.goal-label {
+  font-weight: bold;
+  color: #d1545e;
+  font-size: 18px;
+}
+
 
 .move-log-container {
   max-height: 500px; 

@@ -107,6 +107,7 @@ function App() {
     } else {
       dispatch({ type: "END_TURN" }); // triggers useEffect below
     }
+
   };
 
   //jogada IA
@@ -117,7 +118,7 @@ function App() {
     let move;
     let depth;
     
-    const cond1 = state.rows >= 9 && state.cols>= 9 && state.mode == "ai_vs_ai";
+    const cond1 = (state.rows >= 9 || state.cols>= 9) && state.mode == "ai_vs_ai";
     const cond2 = state.rows >= 10 && state.cols>= 10 && state.mode
 
 
@@ -126,7 +127,7 @@ function App() {
     }else{
       depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);
     }
-      console.log(` AI ${currentPlayer} searching with depth ${depth}`);
+      //console.log(` AI ${currentPlayer} searching with depth ${depth}`);
       move = ai.chooseMove(board, depth,round);
     
 
@@ -217,9 +218,9 @@ function App() {
 
 
  // log de estados em cada carregamento
-  //useEffect(() => {
-    //console.log("[App] Full state updated:", state);
-  //}, [state]);
+  // useEffect(() => {
+  //   console.log("[App] Full state updated:", state);
+  // }, [state]);
 
 
 
@@ -302,7 +303,7 @@ function App() {
           <h2>Vitória do Jogador {winner}!</h2>
           ) }
           {winner >2 &&(
-          <h2>Jogador {state.currentPlayer} bloqueado!<br />
+          <h2>Jogador bloqueado!<br />
            Vitória do Jogador {winner/3}!</h2>
           ) }
           <button onClick={handleDownloadLog}> Baixar registo do jogo</button>

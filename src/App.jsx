@@ -117,7 +117,7 @@ function App() {
     let move;
     let depth;
 
-    if (state.rows >= 10 && state.cols>= 10) {
+    if (state.rows >= 9 && state.cols>= 9) {
       depth = 7;
     }else{
       depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);

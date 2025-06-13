@@ -115,12 +115,16 @@ function App() {
     const ai = currentPlayer === 0 ? ai1 : ai2;
 
     let move;
+    let depth;
 
-    // if (round === 0) {
-      const depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);
-      //console.log(` AI ${currentPlayer} searching with depth ${depth}`);
+    if (state.rows >= 10 && state.cols>= 10) {
+      depth = 7;
+    }else{
+      depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);
+    }
+      console.log(` AI ${currentPlayer} searching with depth ${depth}`);
       move = ai.chooseMove(board, depth,round);
-    //}
+    
 
     board.makeMove(move);
     dispatch({ type: "APPLY_MOVE", payload: { move } });

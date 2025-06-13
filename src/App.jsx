@@ -116,8 +116,12 @@ function App() {
 
     let move;
     let depth;
+    
+    const cond1 = state.rows >= 9 && state.cols>= 9 && state.mode == "ai_vs_ai";
+    const cond2 = state.rows >= 10 && state.cols>= 10 && state.mode
 
-    if (state.rows >= 9 && state.cols>= 9) {
+
+    if (cond1 || cond2) {
       depth = 7;
     }else{
       depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);

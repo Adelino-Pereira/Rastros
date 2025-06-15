@@ -17,7 +17,7 @@ export const initialState = {
   isTurnEnded: false,
   round: 0, 
   startDepth: 10,
-  maxDepth: 20,
+  maxDepth: 16,
   difficulty: 5, // default
 
 

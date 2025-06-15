@@ -16,8 +16,8 @@ export const initialState = {
   gameStarted: false,   
   isTurnEnded: false,
   round: 0, 
-  startDepth: 7,
-  maxDepth: 12,
+  startDepth: 10,
+  maxDepth: 20,
   difficulty: 5, // default
 
 

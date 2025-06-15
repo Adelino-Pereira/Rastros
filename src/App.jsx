@@ -119,12 +119,17 @@ function App() {
     let depth;
     
     const cond1 = (state.rows >= 9 || state.cols>= 9) && state.mode == "ai_vs_ai";
-    const cond2 = state.rows >= 10 && state.cols>= 10 && state.mode
+    const cond2 = state.rows >= 10 || state.cols>= 10 && state.mode
 
 
     if (cond1 || cond2) {
       depth = 7;
     }else{
+      // if(state.rows==7 && state.cols== 7){
+      //   state.startDepth = 11;
+      //   state.maxDepth = 20;
+
+      // }
       depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);
     }
       //console.log(` AI ${currentPlayer} searching with depth ${depth}`);

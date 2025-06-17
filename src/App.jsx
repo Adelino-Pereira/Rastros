@@ -88,6 +88,8 @@ function App() {
     endTurn();
   };
 
+
+
   // verificar se é IA a jogar
   const isAiTurn = () => {
     const { mode, currentPlayer } = state;
@@ -259,6 +261,10 @@ function App() {
     
     <div className="buttons">
 
+    {state.gameStarted &&(
+        <button onClick={handleAiTurn} disabled= {isAiTurn()}> Fazer jogada AI</button>
+        )}
+
     {!state.gameStarted && (
 
       <button
@@ -279,7 +285,10 @@ function App() {
 
         )}
 
+
+  
       <div className="game-area">
+
       {Array.isArray(grid) && grid.length > 0 && grid[0]?.length > 0 ? (
         <Board
           grid={grid}

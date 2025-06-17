@@ -7,7 +7,7 @@ export function renderMove(move, gridSize) {
   const [row, col] = move;
   const rowLabel = gridSize - row; // flip Y axis
   const colLabel = String.fromCharCode(97 + col); // 'a', 'b', ...
-  return `${rowLabel}${colLabel}`;
+  return `${colLabel}${rowLabel}`;
 }
 
 export function generateLogText(log, gridSize) {

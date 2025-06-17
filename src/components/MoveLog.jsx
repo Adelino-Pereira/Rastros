@@ -36,7 +36,7 @@ export default function MoveLog({ log, currentPlayer, gridSize, resetKey }) {
     const [row, col] = move;
     const rowLabel = gridSize - row; // troca eixo Y para coincidir com original
     const colLabel = String.fromCharCode(97 + col);
-    return `${rowLabel}${colLabel}`;
+    return `${colLabel}${rowLabel}`;
   };
 
   return (

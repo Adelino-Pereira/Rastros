@@ -5,22 +5,33 @@
     <title>Rastros</title>
     <script src="/game.js"></script> <!-- Manual include -->
     <style>
-      #footer-iframe {
-        width: 100%;
-        border: none;
-        display: block;
-        overflow: hidden;
-        background-color:white;
+  #footer-iframe {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border: none;
+    background-color: white;
+    height: 30px;
+    z-index: 1000;
+  }
 
-        /* Default height for single-line view */
-        height: 30px;
-      }
+  @media (max-width: 768px) {
+    #footer-iframe {
+      height: 60px;
+    }
+  }
 
-      /* Adjust height for two-line view on smaller screens */
-      @media (max-width: 768px) {
-        #footer-iframe {
-          height: 60px;
-        }
+  #root {
+    height: calc(100vh - 30px); /* Reserve space for footer */
+
+  }
+
+  @media (max-width: 768px) {
+    #root {
+      height: calc(100vh - 60px);
+    }
+  }
       }
   </style>
   </head>

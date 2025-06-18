@@ -38,6 +38,7 @@
   align-items: center;
   gap: 40px;
   margin-top: 30px;
+  margin-bottom: 30px;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -145,7 +146,7 @@
 
 
 .move-log-container {
-  max-height: 500px; 
+  max-height: calc(8 * 2.5em); /* Adjust 2.5em to match row height if needed */
   overflow-y: auto;
   border: 1px solid #ccc;
   flex: 0 0 260px;
@@ -153,7 +154,7 @@
 
 .move-log-table {
   width: 100%;
-  table-layout:auto;
+  
   border-collapse: collapse;
 }
 

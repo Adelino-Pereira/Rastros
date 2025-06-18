@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 export default function MoveLog({ log, currentPlayer, gridSize, resetKey }) {
-  const maxVisibleRows = 6;
+  const maxVisibleRows = 8;
 
   // Ref para o contentor para fazer scrol
   const scrollRef = useRef(null);

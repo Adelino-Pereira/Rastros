@@ -136,6 +136,7 @@ function App() {
     }
       console.log(` AI ${currentPlayer} searching with depth ${depth}`);
       move = ai.chooseMove(board, depth,round);
+      console.log(move);
     
 
     board.makeMove(move);

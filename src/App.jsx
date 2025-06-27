@@ -133,6 +133,8 @@ function App() {
 
       // }
       depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);
+      depth = (depth % 2 === 0) ? depth - 1 : depth;
+      depth = Math.max(depth, startDepth);
     }
       //console.log(` AI ${currentPlayer} searching with depth ${depth}`);
       move = ai.chooseMove(board, depth,round);

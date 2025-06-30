@@ -16,6 +16,7 @@ function App() {
   // Carregar WASM e fazer reset do jogo quando carregado
   useEffect(() => {
     initWasm().then((Module) => {
+      Module.initHeuristics();  // register all levels
       dispatch({ type: "SET_WASM", payload: Module });
     });
   }, []);
@@ -29,13 +30,16 @@ function App() {
 
   //configurações do inicio de jogo
   const handleStartGame = () => {
-    const { wasm, size, mode, startDepth, maxDepth } = state;
+    const { wasm, size, mode, startDepth, maxDepth, difficulty } = state;
     if (!wasm) return;
 
     const board = new wasm.Board(state.rows, state.cols)
 
-    const ai1 = new wasm.AI(true, maxDepth);
-    const ai2 = new wasm.AI(false, maxDepth);
+    // const ai1 = new wasm.AI(true, maxDepth);
+    // const ai2 = new wasm.AI(false, maxDepth);
+
+    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,0);
+    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,0);
 
     const rawGrid = board.getGrid();
     const grid = [];
@@ -89,7 +93,6 @@ function App() {
   };
 
 
-
   // verificar se é IA a jogar
   const isAiTurn = () => {
     const { mode, currentPlayer } = state;
@@ -113,16 +116,17 @@ function App() {
   };
 
   //jogada IA
-  const handleAiTurn = () => {
+  const handleAiTurn = (AImoveButn=false) => {
     const { board, ai1, ai2, currentPlayer, round, size, startDepth, maxDepth } = state;
     const ai = currentPlayer === 0 ? ai1 : ai2;
 
     let move;
     let depth;
+    const currentDifficulty = state.difficulty;
     
     const cond1 = (state.rows >= 9 || state.cols>= 9) && state.mode == "ai_vs_ai";
     const cond2 = state.rows >= 10 || state.cols>= 10 && state.mode
-
+    if (state.difficulty == 1){ depth = 1;}
 
     if (cond1 || cond2) {
       depth = 7;
@@ -136,10 +140,26 @@ function App() {
       depth = (depth % 2 === 0) ? depth - 1 : depth;
       depth = Math.max(depth, startDepth);
     }
-      //console.log(` AI ${currentPlayer} searching with depth ${depth}`);
-      move = ai.chooseMove(board, depth,round);
-      //console.log(move);
+    if (AImoveButn==false){
+      if (state.difficulty == 1){ depth = 2;}
+      else if (state.difficulty == 2){ depth = 1;}
+      else if (state.difficulty == 3){ depth = 3;}
+      else if (state.difficulty == 4){ depth = 3;}
+      else if (state.difficulty == 5){ depth = 4;}
+      else{depth = depth;}
+    }else{
+      dispatch({ type: "SET_DIFFICULTY", payload: 10 })
+    }
     
+
+
+    console.log(` AI ${currentPlayer} searching with depth ${depth}`);
+    move = ai.chooseMove(board, depth,round);
+    //console.log(move);
+    
+    if (AImoveButn==true){
+      dispatch({ type: "SET_DIFFICULTY", payload: currentDifficulty })
+    }
 
     board.makeMove(move);
     dispatch({ type: "APPLY_MOVE", payload: { move } });
@@ -265,7 +285,7 @@ function App() {
     <div className="buttons">
 
     {state.gameStarted &&(
-        <button onClick={handleAiTurn} disabled= {isAiTurn()}> Fazer jogada AI</button>
+        <button onClick={() => handleAiTurn(true)} disabled= {isAiTurn()}> Fazer jogada AI</button>
         )}
 
     {!state.gameStarted && (

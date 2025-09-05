@@ -8,6 +8,12 @@ const cols = rows > 0 ? grid[0].length : 0;
   const p1GoalReached = marker && marker[0] === rows - 1 && marker[1] === 0;
   const p2GoalReached = marker && marker[0] === 0 && marker[1] === cols - 1;
 
+  const totalCols = cols + 1; // +1 for left labels
+  const totalRows = rows + 1;
+
+  // Occupy up to 92vmin; each cell size is boardSize / max(totalRows, totalCols)
+  const BOARD_VMIN = 70;
+  const cellSizeVmin = BOARD_VMIN / Math.max(totalCols, totalRows);
 
   const isValidMove = (r, c) =>
     validMoves.some(([vr, vc]) => vr === r && vc === c);
@@ -48,17 +54,27 @@ const cols = rows > 0 ? grid[0].length : 0;
   return (
     <div className="board-wrapper"
       style={{
+        
         opacity: gameStarted ? 1 : 0.5,
         pointerEvents: gameStarted ? "auto" : "none",
+        
+        
+        marginLeft:"-5%"
       }}
       >
       <div
         className="board-grid"
         style={{
+          // CSS variable used by CSS for width/height/marker etc.
+          ['--cell']: `${cellSizeVmin}vmin`,
           display: "grid",
-          gridTemplateColumns: `40px repeat(${cols}, 40px)`,
-          gridTemplateRows: `repeat(${rows}, 40px) 40px`,
-          gap: "4px",
+          gridTemplateColumns: `var(--cell) repeat(${cols}, var(--cell))`,
+          gridTemplateRows: `repeat(${rows}, var(--cell)) var(--cell)`,
+          gap: `calc(var(--cell) * 0.06)`, // scales with cell size
+          // Optional: cap the whole board so it never exceeds viewport
+          width: `calc(var(--cell) * ${totalCols})`,
+          height: `calc(var(--cell) * ${totalRows})`,
+          placeContent: "center"
         }}
       >
         {/* Rows rendered top to bottom, labels increase bottom-up */}

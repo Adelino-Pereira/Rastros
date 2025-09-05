@@ -1,0 +1,74 @@
+[
+  {
+    "id": "st-001",
+    "title": "Fork inicial",
+    "rows": 7,
+    "cols": 7,
+    "playerToMove": 1,
+    "marker": [5,2],
+    "blocked": [[2,4],[2,3],[1,2],[1,1],[1,0],[2,0],[2,1],[3,2],[3,3],[4,3],[5,3],[6,3]],
+    "movesLimit": 2,
+    "difficulty": 1,
+    "tags": ["intro","fork"]
+  },
+    {
+    "id": "st-002",
+    "title": "Trincheira",
+    "rows": 7,
+    "cols": 7,
+    "playerToMove": 1,
+    "marker": [6,2],
+    "blocked": [[2,4],[2,5],[2,6],[3,6],[4,6],[4,5],[4,4],[4,3],[3,2],[2,3],[2,2],[3,1],[4,0],[5,1]],
+    "movesLimit": 5,
+    "difficulty": 2,
+    "tags": ["trap"]
+  },
+  {
+    "id": "st-003",
+    "title": "Corredor para o canto",
+    "rows": 7,
+    "cols": 7,
+    "playerToMove": 2,
+    "marker": [1,2],
+    "blocked": [[2,4],[3,3],[4,3],[4,2],[3,2],[2,3],[1,4],[1,3],[2,2],[3,1],[2,1]],
+    "movesLimit": 6,
+    "difficulty": 1,
+    "tags": ["shortest"]
+  },
+  {
+    "id": "st-004",
+    "title": "Trincheira",
+    "rows": 7,
+    "cols": 7,
+    "playerToMove": 2,
+    "marker": [2,6],
+    "blocked": [[2,4],[3,4],[4,4],[4,5],[5,6],[4,6],[3,6]],
+    "movesLimit": 2,
+    "difficulty": 2,
+    "tags": ["trap"]
+  },
+    {
+    "id": "st-005",
+    "title": "Trincheira",
+    "rows": 7,
+    "cols": 7,
+    "playerToMove": 2,
+    "marker": [2,6],
+    "blocked": [[2,4],[3,4],[3,5],[4,6],[3,6]],
+    "movesLimit": 4,
+    "difficulty": 2,
+    "tags": ["trap"]
+  },
+      {
+    "id": "st-006",
+    "title": "Trincheira",
+    "rows": 7,
+    "cols": 7,
+    "playerToMove": 2,
+    "marker": [0,2],
+    "blocked": [[2,4],[2,5],[3,4],[4,4],[4,3],[4,2],[3,1],[4,0],[3,0],[4,1],[3,2],[3,3],[2,3],[1,2],[0,3]],
+    "movesLimit": 7,
+    "difficulty": 2,
+    "tags": ["trap"]
+  }
+]

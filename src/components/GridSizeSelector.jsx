@@ -20,7 +20,7 @@ export default function GridSizeSelector({ rows, cols, onSelect, disabled }) {
         Tabuleiro
     </div>
       <div className="slider-group">
-        <label htmlFor="rows">Altura: {rows}</label>
+        <label htmlFor="rows">Altura&nbsp;&nbsp;&nbsp;: {rows}</label>
         <input
           type="range"
           id="rows"

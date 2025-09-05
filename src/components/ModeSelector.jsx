@@ -1,5 +1,6 @@
 // src/ModeSelector.jsx
 import React from "react";
+import Sound from "../utils/soundManager";
 
 export default function ModeSelector({ onSelect, value, disabled }) {
   const [mode, setMode] = React.useState("");

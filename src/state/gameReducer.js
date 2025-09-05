@@ -1,3 +1,5 @@
+import Sound from "../utils/soundManager";
+
 export const initialState = {
   wasm: null,
   board: null,
@@ -16,11 +18,12 @@ export const initialState = {
   gameStarted: false,   
   isTurnEnded: false,
   round: 0, 
-  startDepth: 10,
-  maxDepth: 16,
+  startDepth: 9,
+  maxDepth: 17,
   difficulty: 5, // default
+  skipStatsThisMatch: false, // não contar este jogo nas estatísticas se true
 
-
+  problem: { current: null, movesMade: 0, status: "idle" } // NEW
 };
 
 
@@ -60,6 +63,7 @@ export function gameReducer(state, action) {
       return { ...state, size: action.payload };
 
     case "SET_DIMENSIONS":
+      Sound.play("slide");
       return {
         ...state,
         rows: action.payload.rows,
@@ -72,7 +76,9 @@ export function gameReducer(state, action) {
         gameStarted: true,
       };
     case "INIT_GAME":
-      return {
+        const { board, ai1, ai2, grid, marker, validMoves, mode, currentPlayer, moveLog,round } = action.payload;
+        console.log("round",round);
+        return {
         ...state,
         board: action.payload.board,
         ai1: action.payload.ai1,
@@ -80,13 +86,18 @@ export function gameReducer(state, action) {
         grid: action.payload.grid,
         marker: action.payload.marker,
         validMoves: action.payload.validMoves,
-        moveLog: [],
-        currentPlayer: 0,
+        //moveLog: [],
+        moveLog: Array.isArray(moveLog) ? moveLog : [],
+        //currentPlayer: 0,
+        currentPlayer: (typeof currentPlayer === "number" ? currentPlayer : 0),
         winner: null,
-        round: 0,
+        //round: 0,
+        round:  round > 0 ? round : 0,
+        mode: mode ?? state.mode,
         gameStarted: true,
         isTurnEnded: false,
         resetKey: state.resetKey + 1,
+        skipStatsThisMatch: false,
       };
     case "RESET_GAME": {
       const { wasm, size } = state;
@@ -96,6 +107,7 @@ export function gameReducer(state, action) {
 
       const ai1 = new wasm.AI(true, 11);
       const ai2 = new wasm.AI(false, 11);
+      Sound.play("button");
 
       return {
         ...state,
@@ -110,6 +122,8 @@ export function gameReducer(state, action) {
         winner: null,
         resetKey: state.resetKey + 1,
         gameStarted:false,
+        problem: { current: null, movesMade: 0, status: "idle" },
+        skipStatsThisMatch: false,
       };
     }
 
@@ -160,7 +174,56 @@ export function gameReducer(state, action) {
     case "INCREMENT_ROUND":
       return { ...state, round: state.round + 1 };
 
-        default:
-          return state;
-      }
+// NEW PROBLEM-RELATED ACTIONS
+    case "PROBLEM_START": {
+      return {
+        ...state,
+        //mode: "problem",
+        gameStarted: true,
+        winner: null,
+        //round: 0,
+        problem: {
+          current: action.payload,      // the puzzle object
+          movesMade: 0,
+          status: "active"
+        }
+      };
     }
+    case "PROBLEM_MOVE": {
+      const prev = state.problem?.movesMade ?? 0;
+      return { ...state, problem: { ...state.problem, movesMade: prev + 1 } };
+    }
+    case "PROBLEM_SET_STATUS": {
+      return { ...state, problem: { ...state.problem, status: action.payload } };
+    }
+    case "PROBLEM_RESET": {
+      if (!state.problem?.current) return state;
+      return {
+        ...state,
+        winner: null,
+        round: 0,
+        problem: { ...state.problem, movesMade: 0, status: "active" }
+      };
+    }
+    case "PROBLEM_CLEAR": {
+      return {
+        ...state,
+        problem: { current: null, movesMade: 0, status: "idle" }
+      };
+    }
+    // (optional but recommended) clear problem when doing a full RESET_GAME
+    // case "RESET_GAME": {
+    //   const next = /* your existing reset object */;
+    //   next.problem = { current: null, movesMade: 0, status: "idle" };
+    //   return next;
+    // }
+
+
+    case "SKIP_STATS_THIS_MATCH":
+      return { ...state, skipStatsThisMatch: true };
+// END NEW
+
+    default:
+      return state;
+  }
+}

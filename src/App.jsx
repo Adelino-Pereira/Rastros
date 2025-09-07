@@ -124,8 +124,8 @@ function App() {
     // const ai1 = new wasm.AI(true, maxDepth);
     // const ai2 = new wasm.AI(false, maxDepth);
 
-    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,0);
-    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,0);
+    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,1);
+    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,1);
 
     const rawGrid = board.getGrid();
     const grid = [];
@@ -229,7 +229,16 @@ function App() {
     let ai = currentPlayer === 0 ? ai1 : ai2;
     console.log("ai",ai);
     console.log("currentPlayer",currentPlayer);
-    if (!ai) {
+    if (AImoveButn==true){
+      
+        ai = state.wasm.createAIWithLevel(
+          currentPlayer === 0,   // true => P1 AI, false => P2 AI
+          state.maxDepth,
+          10,                    // <-- force difficulty 10 for this move
+          5                     // debug level as you prefer
+        );
+
+    }else if (!ai) {
        const levelForThisMove = AImoveButn ? 10 : state.difficulty;
        console.log("levelForThisMove",levelForThisMove);
        ai = state.wasm.createAIWithLevel(
@@ -280,11 +289,11 @@ function App() {
       dispatch({ type: "SET_DIFFICULTY", payload: 10 })
     }
     
-    if (AImoveButn==true){
+    // if (AImoveButn==true){
       
-      dispatch({ type: "SET_DIFFICULTY", payload: state.difficulty })
-      console.log("cd-",currentDifficulty)
-    }
+    //   dispatch({ type: "SET_DIFFICULTY", payload:10 })
+    //   console.log("cd-",currentDifficulty)
+    // }
 
 
 
@@ -298,6 +307,7 @@ function App() {
     dispatch({ type: "APPLY_MOVE", payload: { move } });
     dispatch({ type: "UPDATE_STATE" });
     dispatch({ type: "INCREMENT_ROUND" });
+
 
     setTimeout(() => {
       endTurn();

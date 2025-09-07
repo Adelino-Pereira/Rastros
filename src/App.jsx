@@ -124,8 +124,8 @@ function App() {
     // const ai1 = new wasm.AI(true, maxDepth);
     // const ai2 = new wasm.AI(false, maxDepth);
 
-    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,1);
-    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,1);
+    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,0);
+    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,0);
 
     const rawGrid = board.getGrid();
     const grid = [];
@@ -203,7 +203,7 @@ function App() {
 
     if (board.isTerminal()) {
       dispatch({ type: "SET_WINNER", payload: board.getWinner() });
-      console.log("Game over! Winner:", board.getWinner());
+      //console.log("Game over! Winner:", board.getWinner());
       if ((state.mode === "human_first" && (board.getWinner() === 1 || board.getWinner() === 3)) ||
           (state.mode === "ai_first" && (board.getWinner() === 2 || board.getWinner() === 6))||
           (state.mode === "human_vs_human")) {
@@ -227,15 +227,15 @@ function App() {
     //const ai = currentPlayer === 0 ? ai1 : ai2;
 
     let ai = currentPlayer === 0 ? ai1 : ai2;
-    console.log("ai",ai);
-    console.log("currentPlayer",currentPlayer);
+    //console.log("ai",ai);
+    //console.log("currentPlayer",currentPlayer);
     if (AImoveButn==true){
       
         ai = state.wasm.createAIWithLevel(
           currentPlayer === 0,   // true => P1 AI, false => P2 AI
           state.maxDepth,
           10,                    // <-- force difficulty 10 for this move
-          5                     // debug level as you prefer
+          0                    // debug level as you prefer
         );
 
     }else if (!ai) {
@@ -297,10 +297,10 @@ function App() {
 
 
 
-    console.log(` AI ${currentPlayer} searching with depth ${depth}`);
-    console.log("round",round)
+    //console.log(` AI ${currentPlayer} searching with depth ${depth}`);
+    //console.log("round",round)
     move = ai.chooseMove(board, depth,round);
-    console.log(move);
+    //console.log(move);
     
 
     board.makeMove(move);

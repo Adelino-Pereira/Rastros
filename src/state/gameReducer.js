@@ -77,7 +77,7 @@ export function gameReducer(state, action) {
       };
     case "INIT_GAME":
         const { board, ai1, ai2, grid, marker, validMoves, mode, currentPlayer, moveLog,round } = action.payload;
-        console.log("round",round);
+        //console.log("round",round);
         return {
         ...state,
         board: action.payload.board,

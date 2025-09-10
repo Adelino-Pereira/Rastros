@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import Sound from "../utils/soundManager";
 
+
 export default function Sidebar({ open, onClose, width = 280, children }) {
   // Lock body scroll when open
   useEffect(() => {
@@ -61,7 +62,7 @@ export default function Sidebar({ open, onClose, width = 280, children }) {
   return (
     <>
       {/* Overlay (click to close) */}
-      <div style={overlayStyle} onClick={onClose} aria-hidden={!open} />
+      <div role="presentation" style={overlayStyle} onClick={onClose} aria-hidden={!open} />
 
       {/* Sidebar panel */}
       <aside style={asideStyle} aria-hidden={!open} aria-label="Sidebar">

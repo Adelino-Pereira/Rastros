@@ -124,8 +124,8 @@ function App() {
     // const ai1 = new wasm.AI(true, maxDepth);
     // const ai2 = new wasm.AI(false, maxDepth);
 
-    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,0);
-    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,0);
+    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,1);
+    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,1);
 
     const rawGrid = board.getGrid();
     const grid = [];
@@ -227,31 +227,10 @@ function App() {
     //const ai = currentPlayer === 0 ? ai1 : ai2;
 
     let ai = currentPlayer === 0 ? ai1 : ai2;
-    //console.log("ai",ai);
-    //console.log("currentPlayer",currentPlayer);
-    if (AImoveButn==true){
-      
-        ai = state.wasm.createAIWithLevel(
-          currentPlayer === 0,   // true => P1 AI, false => P2 AI
-          state.maxDepth,
-          10,                    // <-- force difficulty 10 for this move
-          0                    // debug level as you prefer
-        );
-
-    }else if (!ai) {
-       const levelForThisMove = AImoveButn ? 10 : state.difficulty;
-       console.log("levelForThisMove",levelForThisMove);
-       ai = state.wasm.createAIWithLevel(
-         currentPlayer === 0,     // true => AI for P1, false => P2
-         state.maxDepth,
-         levelForThisMove,
-         1
-       );
-     }
-
     let move;
     let depth;
     let currentDifficulty = state.difficulty;
+
 
     // if (state.problem?.status === "active"){
     //   currentDifficulty = 10;
@@ -289,11 +268,37 @@ function App() {
       dispatch({ type: "SET_DIFFICULTY", payload: 10 })
     }
     
-    // if (AImoveButn==true){
-      
-    //   dispatch({ type: "SET_DIFFICULTY", payload:10 })
-    //   console.log("cd-",currentDifficulty)
-    // }
+
+    // console.log("ai",ai);
+    // console.log("currentPlayer",currentPlayer);
+    if (AImoveButn==true){
+      if (state.rows >= 9 || state.rows >= 9){depth = 8}
+      else{
+          depth = Math.min(startDepth + Math.floor(round / 5), maxDepth);
+          depth = (depth % 2 === 0) ? depth - 1 : depth;
+          depth = Math.max(depth, startDepth);
+      }
+
+      console.log("Forçando nível 10 para esta jogada de IA");
+      ai = state.wasm.createAIWithLevel(
+        currentPlayer === 0,   // true => P1 AI, false => P2 AI
+        depth,
+        10,                    // <-- force difficulty 10 for this move
+        1                   // debug level as you prefer
+      );
+      console.log("depth_AIbtn",depth)
+
+    }else if (!ai) {
+       const levelForThisMove = AImoveButn ? 10 : state.difficulty;
+       console.log("levelForThisMove",levelForThisMove);
+       ai = state.wasm.createAIWithLevel(
+         currentPlayer === 0,     // true => AI for P1, false => P2
+         state.maxDepth,
+         levelForThisMove,
+         1
+       );
+     }
+
 
 
 
@@ -497,7 +502,7 @@ function App() {
     const p = problems[Math.floor(Math.random() * problems.length)];
     const board = new wasm.Board(p.rows, p.cols);
 
-    console.log("playerToMove",p.playerToMove);
+    //console.log("playerToMove",p.playerToMove);
     applyPuzzleToEngine(p, board);
 
     const blocked = countBlocked(board);
@@ -506,8 +511,8 @@ function App() {
 
     // Human always plays the side to move
     const humanIsP1 = (playerToMove === 1);
-    const ai1 = humanIsP1 ? null : wasm.createAIWithLevel(true,  11, 1, 0);
-    const ai2 = humanIsP1 ? wasm.createAIWithLevel(false, 11, 1, 0) : null;
+    const ai1 = humanIsP1 ? null : wasm.createAIWithLevel(true,  11, 10, 1);
+    const ai2 = humanIsP1 ? wasm.createAIWithLevel(false, 11, 10, 1) : null;
 
     const moveLog = buildInitialMoveLogFromPuzzle(p);
 
@@ -864,7 +869,8 @@ function App() {
             if (state.problem.status === "failed") {
               return (
                 <>
-                  <h2>Não conseguiste resolver este problema</h2>
+                  <h2>Não conseguiste resolver este problema! </h2>
+                  <h2 >Tenta outra vez!</h2>
                   <p>
                     {typeof best === "number"
                       ? <>Solução mínima: <strong>{best}</strong> jogadas.</>
@@ -883,7 +889,7 @@ function App() {
             if (optimal) {
               return (
                 <>
-                  <h2>Parabéns! Solução ótima.</h2>
+                  <h2>Parabéns! Encontraste a melhor solução.</h2>
                   <p>Conseguiste em <strong>{used}</strong> jogadas, que é o mínimo.</p>
                   <div style={{ display: "flex", gap: 8, marginTop: 8, justifyContent:"center"  }}>
                     <button onClick={() => setPuzzleDialogOpen(false)}>Fechar</button>
@@ -897,7 +903,7 @@ function App() {
 
             return (
               <>
-                <h2>Solução não ótima!</h2>
+                <h2>Resolveste, mas não é a melhor solução!</h2>
                 <p>
                   Usaste <strong>{used}</strong> jogadas.
                   {typeof best === "number" ? <> Melhor solução: <strong>{best}</strong>.</> : null}
@@ -949,7 +955,12 @@ function App() {
       </div>
     )}
 
-
+{/* para resetar o local storage e voltar a fazer a parecer o diálogo de confirmação de jogada AI
+localStorage.setItem("aiMoveWarnDisabled", "1");
+localStorage.removeItem("aiMoveWarnDisabled");
+localStorage.setItem("aiMoveWarnDisabled", "0");
+Pode vir a ser implementado num menu de configurações com opção de resetar para configurações iniciais
+*/}
 
 
     </div>

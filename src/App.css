@@ -49,6 +49,7 @@ body.light {
 
 }
 
+
 .selector {
   min-width: 150px;
   color:var(--text);
@@ -297,6 +298,11 @@ body.light {
 
 
 /* Modal */
+
+.rb-text{
+  color:var(--text);
+}
+
 .rb-modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,.5);
@@ -325,5 +331,46 @@ body.light {
 .rb-table th, .rb-table td { border-bottom: 1px solid rgba(0,0,0,.08); padding: 8px; text-align: center; }
 .rb-note { font-size: 12px; color: #666; margin-top: 6px; }
 .rb-divide-right{border-right: 1px solid var(--text);}
+
+
+
+
+/* Tip near the button */
+.rb-tip-wrap { position: relative; display: inline-block; }
+
+.rb-tip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgba(0,0,0,.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  animation: rb-tip-in 150ms ease-out forwards;
+  z-index: 1001; /* above footer */
+}
+
+.rb-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--bg) transparent transparent transparent;
+}
+
+@keyframes rb-tip-in {
+  from { opacity: 0; transform: translate(-50%, -6px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
 
 

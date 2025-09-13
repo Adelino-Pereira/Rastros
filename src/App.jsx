@@ -60,7 +60,7 @@ function App() {
     if (state.problem.status !== "active") return;
     if (state.winner === null) return;
 
-    // We create exactly one AI for the opposite side:
+    //  exactly one AI for the opposite side:
     // - If ai1 is null, human is P1; else human is P2.
     const humanIsP1 = !state.ai1;
     const humanWon = state.winner === (humanIsP1 ? 1 : 2);
@@ -124,8 +124,8 @@ function App() {
     // const ai1 = new wasm.AI(true, maxDepth);
     // const ai2 = new wasm.AI(false, maxDepth);
 
-    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,1);
-    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,1);
+    const ai1 = wasm.createAIWithLevel(true, maxDepth, difficulty,0);
+    const ai2 = wasm.createAIWithLevel(false, maxDepth, difficulty,0);
 
     const rawGrid = board.getGrid();
     const grid = [];
@@ -263,6 +263,10 @@ function App() {
       else if (state.difficulty == 3){ depth = 3;}
       else if (state.difficulty == 4){ depth = 3;}
       else if (state.difficulty == 5){ depth = 4;}
+      else if (state.difficulty == 6){ depth = 7;}
+      else if (state.difficulty == 7){ depth = 7;}
+      else if (state.difficulty == 8){ depth = 7;}
+      else if (state.difficulty == 9){ depth = 9;}
       else{depth = depth;}
     }else{
       dispatch({ type: "SET_DIFFICULTY", payload: 10 })
@@ -279,7 +283,7 @@ function App() {
           depth = Math.max(depth, startDepth);
       }
 
-      console.log("Forçando nível 10 para esta jogada de IA");
+      // console.log("Forçando nível 10 para esta jogada de IA");
       ai = state.wasm.createAIWithLevel(
         currentPlayer === 0,   // true => P1 AI, false => P2 AI
         depth,
@@ -295,7 +299,7 @@ function App() {
          currentPlayer === 0,     // true => AI for P1, false => P2
          state.maxDepth,
          levelForThisMove,
-         1
+         0
        );
      }
 

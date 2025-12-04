@@ -34,18 +34,35 @@ export function preparePuzzleGame({
   const { grid, validMoves } = buildGridAndMoves(board);
   const marker = markerFromBoard(board);
 
-  // Quem joga? Paridade de casas bloqueadas
-  const blocked = countBlocked(board);
-  const playerToMove = whoMovesFromParity(blocked);
+  // Quem joga? Se o puzzle trouxer playerToMove, usamos sempre esse valor.
+  // Caso não exista, caímos para paridade de blocos.
+  const playerToMove =
+    typeof puzzle.playerToMove === "number" &&
+    (puzzle.playerToMove === 1 || puzzle.playerToMove === 2)
+      ? puzzle.playerToMove
+      : whoMovesFromParity(countBlocked(board));
+  //console.log("playerToMove", playerToMove);
   board.setCurrentPlayerInt(playerToMove);
 
   // IA(s) só para o lado não humano
   const humanIsP1 = playerToMove === 1;
   const ai1 = humanIsP1
     ? null
-    : makeAi({ wasm, isMax: true, depth: maxDepth, level: difficulty, debug: 0 });
+    : makeAi({
+        wasm,
+        isMax: true,
+        depth: maxDepth,
+        level: difficulty,
+        debug: 0,
+      });
   const ai2 = humanIsP1
-    ? makeAi({ wasm, isMax: false, depth: maxDepth, level: difficulty, debug: 0 })
+    ? makeAi({
+        wasm,
+        isMax: false,
+        depth: maxDepth,
+        level: difficulty,
+        debug: 0,
+      })
     : null;
 
   // Payload adicional (log, rondas e modo)

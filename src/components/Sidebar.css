@@ -1,0 +1,75 @@
+/* components/Sidebar.css */
+:root {
+  --rb-sidebar-w: 280px;
+  --rb-z-overlay: 40;
+  --rb-z-sidebar: 41;
+}
+
+.rb-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: ;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+  z-index: var(--rb-z-overlay);
+}
+.rb-overlay--show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rb-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: var(--rb-sidebar-w);
+  background: #fff;
+  border-right: 1px solid #e7e7e7;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transform: translateX(-100%);
+  transition: transform 220ms ease;
+  z-index: var(--rb-z-sidebar);
+  display: flex;
+  flex-direction: column;
+}
+.rb-sidebar__inner {
+  padding: 16px;
+  overflow: auto;
+  height: 100%;
+}
+.rb-sidebar--open {
+  transform: translateX(0);
+}
+
+/* Responsive - aumenta a side bar em mobile para ser mais legivel
+(verificar eficácia) */
+@media (max-width: 640) {
+  :root {
+    --rb-sidebar-w: 300vw;
+  }
+  .rb-sidebar__inner {
+    padding: 20px;
+    font-size: 2.05rem;
+    line-height: 1.5;
+  }
+  .rb-sidebar button,
+  .rb-sidebar input,
+  .rb-sidebar select,
+  .rb-sidebar label {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .rb-overlay {
+    display: none;
+  }
+  .rb-sidebar {
+    transform: none;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+}

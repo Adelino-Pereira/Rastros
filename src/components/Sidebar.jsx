@@ -21,7 +21,7 @@ export default function Sidebar({ open, onClose, width = 280, children }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // Inline styles (bulletproof)
+  // Inline styles 
   const overlayStyle = {
     position: "fixed",
     inset: 0,

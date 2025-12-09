@@ -13,7 +13,7 @@ export function AiMoveWarningDialog({
     <div className="winner-message" role="dialog" aria-modal="true">
       <h2>Aviso</h2>
       <p>
-        Se prosseguir, este jogo <strong>não</strong> será contabilizado nas
+        Se prosseguires, este jogo <strong>não</strong> será contabilizado nas
         estatísticas do histórico.
       </p>
       <label

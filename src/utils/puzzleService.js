@@ -35,13 +35,17 @@ export function preparePuzzleGame({
   const marker = markerFromBoard(board);
 
   // Quem joga? Se o puzzle trouxer playerToMove, usamos sempre esse valor.
-  // Caso não exista, caímos para paridade de blocos.
+  // Caso não exista, caímos para paridade de blocos (pelo número de casas bloqueadas).
+  const blockedCount =
+    Array.isArray(puzzle.blocked) && puzzle.blocked.length > 0
+      ? puzzle.blocked.length
+      : countBlocked(board);
   const playerToMove =
     typeof puzzle.playerToMove === "number" &&
     (puzzle.playerToMove === 1 || puzzle.playerToMove === 2)
       ? puzzle.playerToMove
-      : whoMovesFromParity(countBlocked(board));
-  //console.log("playerToMove", playerToMove);
+      : whoMovesFromParity(blockedCount);
+  console.log("playerToMove", playerToMove);
   board.setCurrentPlayerInt(playerToMove);
 
   // IA(s) só para o lado não humano

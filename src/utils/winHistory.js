@@ -2,8 +2,8 @@
 const STORAGE_KEY = "slimeTrail_aiWins_v3";
 
 export const MODES = {
-  HUMAN_FIRST: "human_first", // Human is P1, AI is P2
-  AI_FIRST: "ai_first",       // AI is P1, Human is P2
+  HUMAN_FIRST: "human_first", // Humano é P1, IA é P2
+  AI_FIRST: "ai_first",       // IA é P1, Humano é P2
 };
 
 function isoNow() { return new Date().toISOString(); }
@@ -28,7 +28,7 @@ export function getStats() {
     const parsed = JSON.parse(raw);
     if (parsed?.v === 3) return parsed;
 
-    // simple migration from v2 (no per-board): keep totals, add empty byBoard
+    // migração simples da v2 (sem per-board): mantém totais, adiciona byBoard vazio
     if (parsed?.v === 2 && parsed.levels) {
       for (const lvl of Object.values(parsed.levels)) {
         if (!lvl.asP1.byBoard) lvl.asP1.byBoard = {};
@@ -80,7 +80,7 @@ export function resetAiWins() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
-/** Collect the set of boards that have any played games. */
+/** Devolve o conjunto de tabuleiros que têm partidas jogadas. */
 export function boardsPlayed(stats = getStats()) {
   const set = new Set();
   for (const lvl of Object.values(stats.levels)) {
@@ -93,7 +93,7 @@ export function boardsPlayed(stats = getStats()) {
   });
 }
 
-/** Helper to get counts for a level, either aggregated or filtered by board. */
+/** Helper para obter contagens de um nível, agregadas ou filtradas por tabuleiro. */
 export function countsForLevel(levelData, board /* string or "all" */) {
   const pick = (side) => {
     if (!board || board === "all") return side;
@@ -103,7 +103,7 @@ export function countsForLevel(levelData, board /* string or "all" */) {
   return { asP1: pick(levelData.asP1), asP2: pick(levelData.asP2) };
 }
 
-/** Totals across all (or a board) for footer. */
+/** Totais globais (ou por tabuleiro) para o rodapé. */
 export function totals(stats = getStats(), board = "all") {
   const t = { asP1: { played: 0, wins: 0 }, asP2: { played: 0, wins: 0 } };
   for (const lvl of Object.values(stats.levels)) {

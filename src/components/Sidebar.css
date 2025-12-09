@@ -43,8 +43,7 @@
   transform: translateX(0);
 }
 
-/* Responsive - aumenta a side bar em mobile para ser mais legivel
-(verificar eficácia) */
+/* Responsive - aumenta a side bar em mobile para ser mais legivel*/
 @media (max-width: 640) {
   :root {
     --rb-sidebar-w: 300vw;

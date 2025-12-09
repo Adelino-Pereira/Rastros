@@ -23,11 +23,11 @@ export default function RulesDialog({ open, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label="Regras do Jogo"
-      onClick={onClose}                 // click outside closes
+      onClick={onClose}                 // click fora do quadro fecha diálogo
     >
       <div
         className="rb-modal"
-        onClick={(e) => e.stopPropagation()} // prevent overlay close
+        onClick={(e) => e.stopPropagation()} // prevenir que feche ao clicar dentro
         ref={panelRef}
         tabIndex={-1}
       >
@@ -54,17 +54,19 @@ export default function RulesDialog({ open, onClose }) {
           </p>
 
           <h3 className="rb-text">Configuração</h3>
+          <p>Na barra lateral:</p>
           <ol className="rb-text">
-            <li>Escolha o modo: Humano vs Humano, Humano vs IA, etc.</li>
-            <li>Defina o tamanho do tabuleiro.</li>
-            <li>Defina o nível de dificuldade.</li>
+            <li>Escolhe o modo: Humano vs Humano, Humano vs IA, etc.</li>
+            <li>Define o tamanho do tabuleiro.</li>
+            <li>Define o nível de dificuldade.</li>
+            <li>Volta ao tabuleiro e clica em Iniciar</li>
           </ol>
 
           <h3 className="rb-text">Condições de Vitória</h3>
           <ul className="rb-text">
-            <li>Vence quem atingir a sua casa-alvo.</li>
+            <li>Vence quem atingir a sua casa objetivo.</li>
             <li>Ou se o oponente ficar sem movimentos válidos.</li>
-            <li>Mesmo que seja o adversário a mover a peça para a tua casa final, a vitória é tua.</li>
+            <li>Mesmo que seja o adversário a mover a peça para a tua casa final, a vitória é tua, e vice-versa.</li>
           </ul>
         </section>
 

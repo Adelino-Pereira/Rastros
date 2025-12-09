@@ -1,13 +1,13 @@
 // src/utils/soundManager.js
-// Lightweight, app-wide sound manager for Vite + React
-// - Uses HTMLAudioElement (no external deps)
-// - Handles cache-busted asset imports via Vite
-// - Supports overlapping playback (cloning)
-// - Global mute/volume, per-play options, stop by key
-// - Safe unlock on first user gesture (mobile autoplay policies)
+// Gestor de som , à escala da app, para Vite + React
+// - Usa HTMLAudioElement (sem dependências externas)
+// - Lida com assets com cache-busting via Vite
+// - Suporta reprodução simultânea (clonando)
+// - Mute/volume globais, opções por reprodução, stop por chave
+// - Desbloqueio seguro no primeiro gesto do utilizador (políticas mobile)
 
-// Use RELATIVE imports to avoid alias issues
-// Folder tree context:
+// Usar imports RELATIVOS para evitar conflitos de alias
+// Estrutura de pastas:
 //   src/
 //     assets/soundfx/{move.wav, lose.mp3, sidebar.mp3, winning.mp3}
 //     utils/soundManager.js  <-- this file
@@ -31,18 +31,18 @@ const manifest = {
 
 class SoundManager {
   constructor() {
-    this._enabled = false; // will be unlocked on first user gesture
+    this._enabled = false; //  desbloqueado no primeiro gesto do utilizador
     this._muted = false;
-    this._volume = 1.0; // global volume 0..1
+    this._volume = 1.0; // volume global 0..1
 
-    // base Audio objects (one per key) kept paused; we clone for overlaps
+    // objetos Audio base (um por chave) mantidos em pausa; clonamos para sobreposições
     this._bases = new Map();
-    // live playing instances by key -> Set<HTMLAudioElement>
+    // instâncias em reprodução por chave -> Set<HTMLAudioElement>
     this._playing = new Map();
 
     this._autoUnlockAttached = false;
 
-    // Pre-create base elements for faster first play
+    // Pré-cria elementos base para arrancar mais rápido na 1.ª vez
     Object.entries(manifest).forEach(([key, url]) => {
       const a = new Audio(url);
       a.preload = "auto";
@@ -51,7 +51,7 @@ class SoundManager {
     });
   }
 
-  // Attach a one-time listener that unlocks audio on first user interaction
+  // Anexa listener único que desbloqueia áudio no primeiro gesto
   attachAutoUnlock() {
     if (this._autoUnlockAttached) return;
     const unlock = () => {
@@ -66,14 +66,14 @@ class SoundManager {
     this._autoUnlockAttached = true;
   }
 
-  // Attempt to satisfy mobile autoplay policies by doing a tiny play/pause
+  // Tenta satisfazer políticas de autoplay mobile com um play/pause mínimo
   unlock() {
     if (this._enabled) return;
     this._enabled = true;
-    // Try to play & immediately pause a short, silent segment for each base
+    // Tenta reproduzir e pausar de imediato um segmento silencioso por base
     this._bases.forEach((base) => {
       try {
-        base.volume = 0; // silent nudge
+        base.volume = 0; // empurrão silencioso
         const playPromise = base.play();
         if (playPromise && typeof playPromise.then === "function") {
           playPromise
@@ -86,7 +86,7 @@ class SoundManager {
     });
   }
 
-  // Load all base elements (useful if you want to prefetch on app load)
+  // Carrega todos os elementos base (útil para prefetch no load da app)
   preload() {
     this._bases.forEach((a) => { try { a.load(); } catch {} });
   }
@@ -99,7 +99,7 @@ class SoundManager {
   setVolume(v) { this._volume = Math.max(0, Math.min(1, Number(v) || 0)); }
   getVolume() { return this._volume; }
 
-  // Play a sound by key
+  // Toca um som por chave
   // options: { volume=1, rate=1, loop=false, interrupt=false }
   play(key, options = {}) {
     const base = this._bases.get(key);
@@ -112,21 +112,21 @@ class SoundManager {
       volume = 1,
       rate = 1,
       loop = false,
-      interrupt = false, // stop other instances of same key before playing
+      interrupt = false, // interrompe outras instâncias da mesma chave antes de tocar
     } = options;
 
     if (interrupt) this.stop(key);
 
-    // Clone for overlapping playback
+    // Clone para permitir sobreposições
     const node = base.cloneNode(true);
     node.loop = !!loop;
     node.playbackRate = Math.max(0.5, Math.min(4, Number(rate) || 1));
 
-    // Effective volume considers global + per-play volume; honor mute
+    // Volume efetivo considera volume global + por reprodução; respeita mute
     const effectiveVolume = this._muted ? 0 : this._volume * Math.max(0, Math.min(1, Number(volume) || 0));
     node.volume = effectiveVolume;
 
-    // Track instance to allow stopping later
+    // Guarda instância para permitir parar depois
     const set = this._playing.get(key);
     set.add(node);
 
@@ -142,15 +142,15 @@ class SoundManager {
     node.addEventListener("ended", cleanup);
     node.addEventListener("pause", onPauseCleanup);
 
-    // If not yet enabled (mobile), try to kick unlock; playback may still be blocked until user gesture
+    // Se ainda não estiver ativo (mobile), tenta desbloquear; pode continuar bloqueado até gesto do utilizador
     if (!this._enabled) this.attachAutoUnlock();
 
-    // Start playback (best-effort)
+    // Inicia reprodução (best-effort)
     try {
       const p = node.play();
       if (p && typeof p.then === "function") {
         p.catch((err) => {
-          // Likely autoplay policy; keep instance, will play after user gesture if app retries
+          // Provável bloqueio de autoplay; mantém instância, toca após gesto se a app voltar a tentar
           if (import.meta.env.DEV) console.debug("[Sound] play blocked:", err?.name || err);
         });
       }
@@ -158,10 +158,10 @@ class SoundManager {
       if (import.meta.env.DEV) console.debug("[Sound] play error:", err?.name || err);
     }
 
-    return node; // return the HTMLAudioElement in case caller wants to control it
+    return node; // devolve o HTMLAudioElement caso o chamador queira controlá-lo
   }
 
-  // Stop all instances of a key
+  // Pára todas as instâncias de uma chave
   stop(key) {
     const set = this._playing.get(key);
     if (!set) return;
@@ -171,7 +171,7 @@ class SoundManager {
     }
   }
 
-  // Stop everything
+  // Pára tudo
   stopAll() {
     this._playing.forEach((set) => {
       for (const node of Array.from(set)) {

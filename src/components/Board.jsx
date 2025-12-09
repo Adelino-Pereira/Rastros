@@ -8,10 +8,10 @@ const cols = rows > 0 ? grid[0].length : 0;
   const p1GoalReached = marker && marker[0] === rows - 1 && marker[1] === 0;
   const p2GoalReached = marker && marker[0] === 0 && marker[1] === cols - 1;
 
-  const totalCols = cols + 1; // +1 for left labels
+  const totalCols = cols + 1; // +1 para etiquetas de linha à esquerda
   const totalRows = rows + 1;
 
-  // Occupy up to 92vmin; each cell size is boardSize / max(totalRows, totalCols)
+  // Tabuleiro cabe em ~70vmin; cada célula = BOARD_VMIN / max(totalRows, totalCols)
   const BOARD_VMIN = 70;
   const cellSizeVmin = BOARD_VMIN / Math.max(totalCols, totalRows);
 
@@ -22,7 +22,7 @@ const cols = rows > 0 ? grid[0].length : 0;
     const isMarker = marker && marker[0] === r && marker[1] === c;
     const cellVal = grid[r][c];
     const isValid = isValidMove(r, c);
-    const isBlocked = cellVal === 0;
+    const isBlocked = cellVal === 0; // casa já usada/bloqueada
 
     const classNames = ["cell"];
     if (isBlocked && !isMarker) classNames.push("blocked");
@@ -55,8 +55,8 @@ const cols = rows > 0 ? grid[0].length : 0;
     <div className="board-wrapper"
       style={{
         
-        opacity: gameStarted ? 1 : 0.5,
-        pointerEvents: gameStarted ? "auto" : "none",
+        opacity: gameStarted ? 1 : 0.5, // visual: desliga intensidade antes de iniciar
+        pointerEvents: gameStarted ? "auto" : "none", // bloqueia cliques antes do start
         
         
         marginLeft:"-5%"
@@ -65,19 +65,19 @@ const cols = rows > 0 ? grid[0].length : 0;
       <div
         className="board-grid"
         style={{
-          // CSS variable used by CSS for width/height/marker etc.
+          // CSS var controla tamanho base de célula em função do viewport
           ['--cell']: `${cellSizeVmin}vmin`,
           display: "grid",
           gridTemplateColumns: `var(--cell) repeat(${cols}, var(--cell))`,
           gridTemplateRows: `repeat(${rows}, var(--cell)) var(--cell)`,
-          gap: `calc(var(--cell) * 0.06)`, // scales with cell size
-          // Optional: cap the whole board so it never exceeds viewport
+          gap: `calc(var(--cell) * 0.06)`, // escala proporcional ao tamanho da célula
+          // Mantém o tabuleiro dentro do viewport
           width: `calc(var(--cell) * ${totalCols})`,
           height: `calc(var(--cell) * ${totalRows})`,
           placeContent: "center"
         }}
       >
-        {/* Rows rendered top to bottom, labels increase bottom-up */}
+        {/* Linhas desenhadas de cima para baixo; rótulos contam de baixo para cima */}
         {Array.from({ length: rows }, (_, r) => {
           const rowLabel = rows - r;
           return (
@@ -88,10 +88,10 @@ const cols = rows > 0 ? grid[0].length : 0;
           );
         })}
 
-        {/* Bottom-left empty corner */}
+        {/* Canto inferior esquerdo vazio */}
         <div></div>
 
-        {/* Column labels at the bottom */}
+        {/* Etiquetas das colunas na base */}
         {colLabels.map((label) => (
           <div key={`col-${label}`} className="cell-label">
             {label}

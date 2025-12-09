@@ -30,6 +30,7 @@ const countBlockedPure = (board, rows, cols) => {
 
 // Calcula quem joga pela paridade de blocos: ímpar -> P1, par -> P2
 const whoMovesFromParityPure = (blockedCount) => {
+  console.log("blockedCount", blockedCount);
   const totalMarkers = blockedCount + 1; // +1 para o marcador branco
   return totalMarkers % 2 === 1 ? 1 : 2; // ímpar -> P1, par -> P2
 };
@@ -39,7 +40,7 @@ const pairMoves = (moves) => {
   for (let i = 0; i < moves.length; i++) {
     const r = Math.floor(i / 2);
     if (!rounds[r]) rounds[r] = [null, null];
-    const side = i % 2 === 0 ? 0 : 1;
+    const side = i % 2 === 0 ? 0 : 1; // primeiro índice é P1, segundo P2
     rounds[r][side] = moves[i];
   }
   return rounds;
@@ -162,7 +163,7 @@ export function useGameEngine(state, dispatch, uiRefs) {
     dispatch({ type: "PROBLEM_CLEAR" });
     setPuzzleDialogOpen(false);
 
-    const board = new wasm.Board(state.rows, state.cols);
+    const board = new wasm.Board(state.rows, state.cols); // instância limpa para novo jogo
     const shuffletiesFlag = true;
     const orderingPolicy = state.wasm?.OrderingPolicy;
 
@@ -266,9 +267,9 @@ export function useGameEngine(state, dispatch, uiRefs) {
       });
 
       if (forceMove) {
-        if (!state.gameStarted || state.winner || isAiTurn()) return;
+        if (!state.gameStarted || state.winner || isAiTurn()) return; // botão manual ignora se jogo acabado ou turno da IA
         if (state.rows >= 9 || state.rows >= 9) {
-          depth = 8;
+          depth = 8; // tabuleiros grandes mantêm profundidade fixa ao forçar
         } else {
           depth = computeDepthWithRounds(startDepth, maxDepth, round);
         }
@@ -281,12 +282,12 @@ export function useGameEngine(state, dispatch, uiRefs) {
           debug: 1,
         });
       } else if (!ai) {
-        const levelForThisMove = forceMove ? 10 : state.difficulty;
+        const levelForThisMove = forceMove ? 10 : state.difficulty; // fallback para IA ainda não criada
 
         ai = makeAi({
           wasm: state.wasm,
           isMax: currentPlayer === 0,
-          depth: state.maxDepth,
+          depth: state.maxDepth, // usa profundidade padrão ao criar IA on-the-fly
           level: levelForThisMove,
           debug: 0,
         });
@@ -314,10 +315,10 @@ export function useGameEngine(state, dispatch, uiRefs) {
     (r, c) => {
       const { board, validMoves, winner } = state;
 
-      if (!state.gameStarted || winner || isAiTurn()) return;
+      if (!state.gameStarted || winner || isAiTurn()) return; // ignora cliques fora do contexto de jogo
 
       const valid = validMoves.some(([vr, vc]) => vr === r && vc === c);
-      if (!valid) return;
+      if (!valid) return; // proteção extra caso UI permita clicar numa casa inválida
 
       board.makeMove([r, c]);
       Sound.play("move");
@@ -352,12 +353,12 @@ export function useGameEngine(state, dispatch, uiRefs) {
     if (!wasm) return;
     setPuzzleDialogOpen(false);
 
-    const p = problems[Math.floor(Math.random() * problems.length)];
+    const p = problems[Math.floor(Math.random() * problems.length)]; // seleciona puzzle aleatório da lista
     const prepared = preparePuzzleGame({
       puzzle: p,
       wasm,
       makeAi,
-      maxDepth: 11, // puzzles usam profundidade máxima fixa no modo atual
+      maxDepth: 11, // puzzles usam profundidade máxima fixa
       difficulty: 10,
       buildGridAndMoves: (b) =>
         buildGridAndMovesPure(b, state.rows, state.cols),

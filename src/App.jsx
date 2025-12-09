@@ -49,6 +49,7 @@ function AppContent({
   } = useGameEngineContext();
 
   useEffect(() => {
+    // Abre diálogo de puzzle quando termina com sucesso ou falha
     if (
       state.problem?.status === "success" ||
       state.problem?.status === "failed"
@@ -58,6 +59,7 @@ function AppContent({
   }, [state.problem?.status, setPuzzleDialogOpen]);
 
   useEffect(() => {
+    // Se o puzzle estava ativo e o jogo acabou, marca sucesso/fracasso consoante vencedor humano
     if (!state.problem?.current) return;
     if (state.problem.status !== "active") return;
     if (state.winner === null) return;
@@ -80,11 +82,12 @@ function AppContent({
   }
 
   useEffect(() => {
-    Sound.attachAutoUnlock(); // unlock on first tap/click/keypress
-    Sound.preload(); // optional: warm-up
+    Sound.attachAutoUnlock(); // desbloqueia áudio no primeiro gesto do utilizador
+    Sound.preload(); // pré-carrega para evitar atrasos iniciais
   }, []);
 
   useEffect(() => {
+    // Atualiza seleção sonora e persiste em localStorage
     Sound.setMuted(!soundOn);
     localStorage.setItem("soundOn", String(soundOn));
     if (soundOn) {
@@ -93,6 +96,7 @@ function AppContent({
   }, [soundOn]);
 
   useEffect(() => {
+    // Aplica tema ao body
     if (typeof document !== "undefined") {
       document.body.classList.remove("light", "dark");
       document.body.classList.add(theme);
@@ -100,6 +104,7 @@ function AppContent({
   }, [theme]);
 
   useEffect(() => {
+    // Inicializa WASM e heurísticas ao montar
     initWasm().then((Module) => {
       Module.initHeuristics();
       dispatch({ type: "SET_WASM", payload: Module });
@@ -107,6 +112,7 @@ function AppContent({
   }, [dispatch]);
 
   useEffect(() => {
+    // Quando o módulo WASM chega, limpa estado de jogo
     if (state.wasm) {
       dispatch({ type: "RESET_GAME" });
     }
@@ -125,6 +131,7 @@ function AppContent({
   } = state;
 
   useEffect(() => {
+    // Turno automático da IA conforme modo/jogador atual
     if (!state.gameStarted || state.winner !== null) return;
 
     const { currentPlayer, mode, ai1, ai2 } = state;
@@ -143,6 +150,7 @@ function AppContent({
   }, [state.currentPlayer]);
 
   useEffect(() => {
+    // Após sinal de fim de turno, alterna jogador e atualiza state derivado
     if (!state.isTurnEnded) return;
 
     const { board } = state;
@@ -153,6 +161,7 @@ function AppContent({
   }, [dispatch, state.isTurnEnded]);
 
   useEffect(() => {
+    // Força primeira jogada da IA em modos que começam com IA
     if (
       state.gameStarted &&
       state.round === 0 &&
@@ -164,6 +173,7 @@ function AppContent({
   }, [state.gameStarted]);
 
   const handleDownloadLog = () => {
+    // Exporta o histórico de jogadas para CSV com timestamp
     const text = generateLogText(moveLog, grid.length);
     const blob = new Blob([text], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -205,6 +215,7 @@ function AppContent({
   }
 
   useEffect(() => {
+    // Regista estatísticas de IA vs Humano no localStorage após cada jogo
     const { winner, mode, difficulty, resetKey, rows, cols } = state;
     if (winner == null) return;
     if (lastLoggedKeyRef.current === resetKey) return;
@@ -215,7 +226,7 @@ function AppContent({
 
     if (mode !== MODES.HUMAN_FIRST && mode !== MODES.AI_FIRST) return;
 
-    const level = String(difficulty ?? "1"); // your app’s selected level (1..10)
+    const level = String(difficulty ?? "1"); 
     const board = `${rows}x${cols}`;
     recordAiVsGame({ mode, level, winner: wn, board });
 

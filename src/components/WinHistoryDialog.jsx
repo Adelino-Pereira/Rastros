@@ -36,7 +36,7 @@ export default function WinHistoryDialog({ open, onClose }) {
     if (totalPlayed > 0) {
       setConfirmOpen(true);
     } else {
-      setShowTip(true); // show “não há estatísticas…” tip
+      setShowTip(true); // mostra tip “não há estatísticas…” 
     }
   };
 

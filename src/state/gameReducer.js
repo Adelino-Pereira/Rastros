@@ -36,18 +36,18 @@ function extractGrid(board) {
 }
 
 function extractValidMoves(board) {
-  // prefer flat valid moves if exposto pelo binding
+  // prefere vetor plano de jogadas válidas se exposto pelo binding
   if (typeof board.getFlatValidMoves === "function") {
     return convertValidMoves(board.getFlatValidMoves());
   }
-  return convertValidMoves(board.getValidMoves());
+  return convertValidMoves(board.getValidMoves()); // fallback getter antigo
 }
 
 function extractMarker(board) {
   if (typeof board.getFlatMarker === "function") {
     return convertMarker(board.getFlatMarker());
   }
-  return convertMarker(board.getMarker());
+  return convertMarker(board.getMarker()); // fallback getter antigo
 }
 
 export function gameReducer(state, action) {
@@ -62,6 +62,7 @@ export function gameReducer(state, action) {
       return { ...state, size: action.payload };
 
     case "SET_DIMENSIONS":
+      // altera dimensões do tabuleiro 
       Sound.play("slide");
       return {
         ...state,
@@ -76,18 +77,18 @@ export function gameReducer(state, action) {
       };
     case "INIT_GAME":
       const {
-        board,
-        ai1,
-        ai2,
-        grid,
-        marker,
-        validMoves,
+        board,      // extraído mas não usado aqui (manter para legibilidade)
+        ai1,        // extraído mas não usado aqui (manter para legibilidade)
+        ai2,        // extraído mas não usado aqui (manter para legibilidade)
+        grid,       // extraído mas não usado aqui (manter para legibilidade)
+        marker,     // extraído mas não usado aqui (manter para legibilidade)
+        validMoves, // extraído mas não usado aqui (manter para legibilidade)
         mode,
         currentPlayer,
         moveLog,
         round,
       } = action.payload;
-      //console.log("round",round);
+      // inicia jogo com estado vindo do hook (board/IA/grid etc.)
       return {
         ...state,
         board: action.payload.board,
@@ -185,7 +186,7 @@ export function gameReducer(state, action) {
     case "INCREMENT_ROUND":
       return { ...state, round: state.round + 1 };
 
-    // NEW PROBLEM-RELATED ACTIONS
+    // AÇÕES NOVAS PARA PROBLEMAS
     case "PROBLEM_START": {
       return {
         ...state,
@@ -225,7 +226,7 @@ export function gameReducer(state, action) {
         problem: { current: null, movesMade: 0, status: "idle" },
       };
     }
-    // (optional but recommended) clear problem when doing a full RESET_GAME
+    // clear problem when doing a full RESET_GAME
     // case "RESET_GAME": {
     //   const next = /* your existing reset object */;
     //   next.problem = { current: null, movesMade: 0, status: "idle" };
